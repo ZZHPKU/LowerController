@@ -5,7 +5,7 @@ from utilities import readLogFile
 
 import time
 
-with open(r'data/right_bin_to_left_bin_pipeline.pkl', "rb") as f:
+with open(r"data/right_bin_to_left_bin_pipeline.pkl", "rb") as f:
     all_sols = pickle.load(f)
 
 p.connect(p.GUI)
@@ -86,7 +86,7 @@ for j in range(num_of_joints_work):
         control_traj[0, j] = jointPosition
 time.sleep(0.5)
 
-logID = p.startStateLogging(p.STATE_LOGGING_GENERIC_ROBOT, r"mytest\\log.txt", maxLogDof=7,
+logID = p.startStateLogging(p.STATE_LOGGING_GENERIC_ROBOT, r"data/log.txt", maxLogDof=7,
                             logFlags=p.STATE_LOG_JOINT_TORQUES)
 
 for k in range(1, N):
@@ -131,9 +131,14 @@ a = np.array(readLogFile(r"data/log.txt", True))
 traj_detail = a[:, 17:24]
 control_detail = a[:, 31:38]
 
+print(control_detail[-1])
+print(control[-1])
+
 order = np.arange(N - 1)
 
 print("error of the two log method:",
       np.linalg.norm(control - control_detail[sub_step_num * order + sub_step_num - 1] / sub_step_num))
 print("trajectory follow error:", np.linalg.norm(control_traj - traj) ** 2 * time_step)
 print("torque cost:", np.sum((control_detail / sub_step_num) ** 2 * time_step / sub_step_num))
+
+
